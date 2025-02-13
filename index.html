@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pret Quiz</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#862633">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sofia+Pro&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sofia Pro', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(255, 255, 255);
+            color: rgb(230, 56, 136);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 300px;
+            margin-bottom: 2rem; /* Increased spacing */
+        }
+
+        .home-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem; /* Added gap between elements */
+        }
+
+        .home-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .home-description {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        .button {
+            background-color: rgb(134, 38, 51);
+            color: rgb(255, 255, 255);
+            padding: 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            text-transform: capitalize;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:active {
+            background-color: rgb(230, 56, 136);
+            color: white;
+        }
+
+        
+        .question {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .timer {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: rgb(134, 38, 51);
+        }
+
+        #qrCode {
+            margin: 2rem auto;
+            max-width: 200px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem; /* Space between buttons */
+        }
+
+        .button.quiz-option {
+            max-width: 600px; /* Wider but not as large as before */
+            padding: 1rem; /* Reduced padding */
+            font-size: 1rem; /* Smaller font */
+        }
+
+        #thankYouPage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #qrCode {
+            margin: 2rem auto;
+            max-width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #thankYouPage .home-button {
+        background-color: rgb(134, 38, 51);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        text-transform: lowercase;
+        }
+
+        #thankYouPage .home-button:active {
+        background-color: rgb(230, 56, 136);
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .home-title {
+                font-size: 1.5rem;
+            }
+            .question {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="pret-logo-red.png" alt="Pret A Manger Logo" class="logo">
+        
+        <!-- Home Page -->
+        <div id="homePage">
+            <div class="home-content">
+                <h1 class="home-title">Welcome to the Pret Quiz!</h1>
+                <p class="home-description">Test your knowledge about Pret A Manger and London. Answer one question correctly to win!</p>
+                <button class="button" onclick="startQuiz()">Start Quiz</button>
+            </div>
+        </div>
+
+        <!-- Quiz Page -->
+        <div id="quizPage" class="hidden">
+            <div class="timer" id="timer">Time remaining: 30s</div>
+            <div class="question" id="question"></div>
+            <div id="options"></div>
+        </div>
+
+        <!-- Thank You Page -->
+        <div id="thankYouPage" class="hidden">
+            <h2 id="resultMessage"></h2>
+            <div id="qrCode"></div>
+            <button class="home-button hidden" onclick="returnHome()">Home</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
