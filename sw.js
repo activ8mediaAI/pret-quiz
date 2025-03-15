@@ -5,7 +5,9 @@ const urlsToCache = [
   'manifest.json',
   'icon-192x192.png',
   'icon-512x512.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+  'pret-logo-red.png',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
+  'fonts/StarSerif-Headline.otf'
 ];
 
 self.addEventListener('install', event => {

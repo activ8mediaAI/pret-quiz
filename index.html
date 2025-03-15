@@ -10,6 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Sofia+Pro&display=swap" rel="stylesheet">
     
     <style>
+        @font-face {
+        font-family: 'StarSerif-Headline';
+        src: url('fonts/StarSerif-Headline.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        }    
+
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +24,7 @@
         }
 
         body {
-            font-family: 'Sofia Pro', Arial, sans-serif;
+            font-family: 'StarSerif-Headline', 'Sofia Pro', Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -149,6 +156,70 @@
         background-color: rgb(230, 56, 136);
         }
 
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            color: rgb(134, 38, 51);
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgb(134, 38, 51);
+            border-radius: 5px;
+            font-size: 1rem;
+            color: rgb(134, 38, 51);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgb(230, 56, 136);
+        }
+
+        .error-message {
+            color: rgb(230, 56, 136);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+
+        /* Admin page styles */
+        #adminPage {
+            text-align: left;
+        }
+
+        #userDataList {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        #userDataList th, #userDataList td {
+            border: 1px solid rgb(134, 38, 51);
+            padding: 0.5rem;
+        }
+
+        #userDataList th {
+            background-color: rgb(134, 38, 51);
+            color: white;
+        }
+
+        #userDataList tr:nth-child(even) {
+            background-color: rgba(134, 38, 51, 0.1);
+        }
+
+        #exportButton {
+            margin-top: 1rem;
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -172,7 +243,21 @@
             <div class="home-content">
                 <h1 class="home-title">Welcome to the Pret Quiz!</h1>
                 <p class="home-description">Test your knowledge about Pret A Manger and London. Answer one question correctly to win!</p>
-                <button class="button" onclick="startQuiz()">Start Quiz</button>
+                
+                <!-- User Information Form -->
+                <form id="userForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name" required>
+                        <p class="error-message" id="nameError"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="userMobile">Mobile Number</label>
+                        <input type="tel" id="userMobile" placeholder="Enter your mobile number" required>
+                        <p class="error-message" id="mobileError"></p>
+                    </div>
+                    <button class="button" onclick="validateAndStart()">Start Quiz</button>
+                </form>
             </div>
         </div>
 
@@ -187,7 +272,27 @@
         <div id="thankYouPage" class="hidden">
             <h2 id="resultMessage"></h2>
             <div id="qrCode"></div>
-            <button class="home-button hidden" onclick="returnHome()">Home</button>
+            <button class="home-button" onclick="returnHome()">Home</button>
+        </div>
+        
+        <!-- Admin Page (hidden by default) -->
+        <div id="adminPage" class="hidden">
+            <h2>User Data</h2>
+            <table id="userDataList">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Date</th>
+                        <th>Won</th>
+                    </tr>
+                </thead>
+                <tbody id="userDataBody">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+            <button class="button" id="exportButton" onclick="exportData()">Export Data</button>
+            <button class="button" onclick="returnHome()">Back to Home</button>
         </div>
     </div>
 
