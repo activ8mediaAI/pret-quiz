@@ -22,9 +22,9 @@ const questions = [
         audio: "audio/london-Q2.wav"
     },
     {
-        question: "Which London street is famous for its luxury shopping?",
-        options: ["Bond Street", "Abbey Road", "Oxford Street", "Camden Market"],
-        correct: 0,
+        question: "How do you pronounce Pret A Manger?",
+        options: ["Pret A Manager", "Pret A Manger", "Pret A Monj-eh", "I don't know, you figure it out!"],
+        correct: 2,
         audio: "audio/london-Q3.wav"
     },
     {
@@ -74,14 +74,16 @@ const questions = [
 let timer;
 let autoReturnTimer;
 const QR_URL = "https://your-landing-page-url.com";
-let currentQuestion;
-let usedQuestions = [];
+let currentQuestionIndex = 0;
+let correctAnswers = 0;
 let currentAudio = null;
 let currentUser = {
     name: "",
     mobile: ""
 };
 let isQuizInProgress = false;
+const TOTAL_QUESTIONS = 10;
+const WINNING_SCORE = 7;
 
 // Function to handle user data storage
 function saveUserData(name, mobile, won) {
@@ -100,6 +102,21 @@ function saveUserData(name, mobile, won) {
     
     // Save back to localStorage
     localStorage.setItem('pretQuizUsers', JSON.stringify(existingData));
+}
+
+// Function to get and increment counter for winners
+function getNextCounterNumber() {
+    // Get current counter from localStorage
+    let counter = parseInt(localStorage.getItem('winnerCounter') || '0');
+    
+    // Increment the counter
+    counter++;
+    
+    // Save the new counter value
+    localStorage.setItem('winnerCounter', counter.toString());
+    
+    // Format to 3 digits with leading zeros
+    return counter.toString().padStart(3, '0');
 }
 
 // Function to validate the form
@@ -162,30 +179,31 @@ function showPage(pageId) {
     document.getElementById(pageId).classList.remove('hidden');
 }
 
-function getRandomQuestion() {
-    if (usedQuestions.length === questions.length) {
-        usedQuestions = [];
-    }
-    let availableQuestions = questions.filter(q => !usedQuestions.includes(q));
-    let randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-    usedQuestions.push(randomQuestion);
-    return randomQuestion;
-}
-
 function startQuiz() {
     clearAllTimers();
     isQuizInProgress = true;
     
-    // Get a random question and its index
-    let randomQuestion = getRandomQuestion();
-    currentQuestion = questions.findIndex(q => q === randomQuestion);
+    // Reset quiz state
+    currentQuestionIndex = 0;
+    correctAnswers = 0;
+    
+    // Shuffle questions array to randomize order
+    shuffleQuestions();
     
     // Show the quiz page
     showPage('quizPage');
     
-    // Display the question and start the timer
+    // Display the first question and start the timer
     displayQuestion();
     startTimer();
+}
+
+function shuffleQuestions() {
+    // Fisher-Yates shuffle algorithm
+    for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
 }
 
 function playQuestionAudio(audioFile) {
@@ -211,13 +229,14 @@ function playQuestionAudio(audioFile) {
 function displayQuestion() {
     if (!isQuizInProgress) return;
     
-    const question = questions[currentQuestion];
-    document.getElementById('question').textContent = question.question;
+    // Update question counter
+    const questionNumber = document.getElementById('question');
+    questionNumber.textContent = `Question ${currentQuestionIndex + 1} of ${TOTAL_QUESTIONS}: ${questions[currentQuestionIndex].question}`;
     
     const optionsContainer = document.getElementById('options');
     optionsContainer.innerHTML = '';
     
-    question.options.forEach((option, index) => {
+    questions[currentQuestionIndex].options.forEach((option, index) => {
         const button = document.createElement('button');
         button.className = 'button quiz-option';
         button.textContent = option;
@@ -228,7 +247,7 @@ function displayQuestion() {
     // Play audio after DOM is updated
     setTimeout(() => {
         if (isQuizInProgress) {
-            playQuestionAudio(question.audio);
+            playQuestionAudio(questions[currentQuestionIndex].audio);
         }
     }, 100);
 }
@@ -250,7 +269,8 @@ function startTimer() {
         
         if (timeLeft <= 0) {
             clearInterval(timer);
-            showThankYou(false);
+            // Time's up for this question - move to the next
+            moveToNextQuestion(false);
         }
     }, 1000);
 }
@@ -258,7 +278,6 @@ function startTimer() {
 function checkAnswer(selectedIndex) {
     if (!isQuizInProgress) return;
     
-    isQuizInProgress = false;
     clearInterval(timer);
     
     if (currentAudio) {
@@ -266,8 +285,25 @@ function checkAnswer(selectedIndex) {
         currentAudio = null;
     }
     
-    const correct = questions[currentQuestion].correct === selectedIndex;
-    showThankYou(correct);
+    const correct = questions[currentQuestionIndex].correct === selectedIndex;
+    if (correct) {
+        correctAnswers++;
+    }
+    
+    moveToNextQuestion(true);
+}
+
+function moveToNextQuestion(answered) {
+    currentQuestionIndex++;
+    
+    if (currentQuestionIndex >= TOTAL_QUESTIONS) {
+        // All questions answered, show results
+        showThankYou(correctAnswers >= WINNING_SCORE);
+    } else {
+        // Display next question and restart timer
+        displayQuestion();
+        startTimer();
+    }
 }
 
 function showThankYou(isWinner) {
@@ -278,15 +314,39 @@ function showThankYou(isWinner) {
     const resultMessage = document.getElementById('resultMessage');
     
     if (isWinner) {
-        resultMessage.textContent = `Congratulations ${currentUser.name}! You've won!`;
-        new QRCode(document.getElementById("qrCode"), {
-            text: QR_URL,
-            width: 128,
-            height: 128
-        });
+        // Get next counter number
+        const counterNumber = getNextCounterNumber();
+        
+        // Create counter element if it doesn't exist
+        let counterElement = document.getElementById('winnerCounter');
+        if (!counterElement) {
+            counterElement = document.createElement('div');
+            counterElement.id = 'winnerCounter';
+            counterElement.className = 'winner-counter';
+            // Append to container instead of thankYouPage to position at top
+            document.querySelector('.container').appendChild(counterElement);
+        }
+        
+        // Set counter text
+        counterElement.textContent = counterNumber;
+        
+        resultMessage.textContent = `Congratulations ${currentUser.name}! You got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct and won!`;
+        
+        // Show pastry image instead of QR code
+        const pastryContainer = document.getElementById("pastryImage");
+        pastryContainer.innerHTML = '<img src="pastry-image.png" alt="Pret Pastry" class="pastry-img">';
     } else {
-        resultMessage.textContent = `Better luck next time, ${currentUser.name}!`;
-        document.getElementById("qrCode").innerHTML = '';
+        // Remove counter if it exists
+        const counterElement = document.getElementById('winnerCounter');
+        if (counterElement) {
+            counterElement.remove();
+        }
+        
+        resultMessage.textContent = `Better luck next time, ${currentUser.name}! You got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct.`;
+        
+        // Show pastry image for non-winners too
+        const pastryContainer = document.getElementById("pastryImage");
+        pastryContainer.innerHTML = '<img src="pastry-image.png" alt="Pret Pastry" class="pastry-img">';
     }
     
     // Save user data with result
@@ -311,7 +371,7 @@ function returnHome() {
     }
     
     showPage('homePage');
-    document.getElementById("qrCode").innerHTML = '';
+    document.getElementById("pastryImage").innerHTML = '';
     document.getElementById('resultMessage').textContent = '';
     
     // Reset form

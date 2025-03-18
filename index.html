@@ -31,7 +31,7 @@
             align-items: center;
             justify-content: center;
             background-color: rgb(255, 255, 255);
-            color: rgb(230, 56, 136);
+            color: rgb(134, 38, 51);
             padding: 20px;
         }
 
@@ -103,9 +103,9 @@
             color: rgb(134, 38, 51);
         }
 
-        #qrCode {
-            margin: 2rem auto;
+        .pastry-img {
             max-width: 200px;
+            margin: 2rem auto;
         }
 
         .hidden {
@@ -132,7 +132,7 @@
             justify-content: center;
         }
 
-        #qrCode {
+        #pastryImage {
             margin: 2rem auto;
             max-width: 200px;
             display: flex;
@@ -232,6 +232,35 @@
                 font-size: 1.5rem;
             }
         }
+
+    /* Add this to your existing CSS in the style section of index.html */
+
+.winner-counter {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgb(134, 38, 51);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+/* Make container position relative for proper counter positioning */
+.container {
+    position: relative;
+}
+
+/* This ensures the counter appears at the top of the page, not just the thank you section */
+#winnerCounter {
+    z-index: 10;
+}
+
+    #thankYouPage {
+        position: relative; /* For absolute positioning of counter */
+    }
     </style>
 </head>
 <body>
@@ -242,7 +271,7 @@
         <div id="homePage">
             <div class="home-content">
                 <h1 class="home-title">Welcome to the Pret Quiz!</h1>
-                <p class="home-description">Test your knowledge about Pret A Manger and London. Answer one question correctly to win!</p>
+                <p class="home-description">Test your knowledge about Pret A Manger and London. Answer 7 out of 10 questions correctly to win!</p>
                 
                 <!-- User Information Form -->
                 <form id="userForm" onsubmit="return false;">
@@ -271,7 +300,7 @@
         <!-- Thank You Page -->
         <div id="thankYouPage" class="hidden">
             <h2 id="resultMessage"></h2>
-            <div id="qrCode"></div>
+            <div id="pastryImage"></div>
             <button class="home-button" onclick="returnHome()">Home</button>
         </div>
         
@@ -296,7 +325,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
