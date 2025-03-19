@@ -330,7 +330,7 @@ function showThankYou(isWinner) {
         // Set counter text
         counterElement.textContent = counterNumber;
         
-        resultMessage.textContent = `Congratulations ${currentUser.name}!\nYou got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct and won!`;
+        resultMessage.textContent = `Congratulations, ${currentUser.name}!\nYou got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct and won!`;
         
         // Show pastry image instead of QR code
         const pastryContainer = document.getElementById("pastryImage");
