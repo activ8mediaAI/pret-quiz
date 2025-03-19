@@ -22,16 +22,16 @@ const questions = [
         audio: "audio/london-Q2.wav"
     },
     {
-        question: "How do you pronounce Pret A Manger?",
-        options: ["Pret A Manager", "Pret A Manger", "Pret A Monj-eh", "I don't know, you figure it out!"],
-        correct: 2,
+        question: "Which London street is famous for its luxury shopping?",
+        options: ["Bond Street", "Abbey Road", "Oxford Street", "Camden Market"],
+        correct: 1,
         audio: "audio/london-Q3.wav"
     },
     {
-        question: "What colour are traditional London phone booths?",
-        options: ["Blue", "Red", "Green", "Yellow"],
-        correct: 1,
-        audio: "audio/london-Q4.wav"
+        question: "How do you pronounce Pret A Manger?",
+        options: ["Pret A Manager", "Pret A Manger", "Pret A Monj-eh", "I don't know, you figure it out!"],
+        correct: 2,
+        audio: "audio/london-Qnew.wav"
     },
     {
         question: "What famous river runs through London?",
@@ -330,7 +330,7 @@ function showThankYou(isWinner) {
         // Set counter text
         counterElement.textContent = counterNumber;
         
-        resultMessage.textContent = `Congratulations ${currentUser.name}! You got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct and won!`;
+        resultMessage.textContent = `Congratulations ${currentUser.name}!\nYou got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct and won!`;
         
         // Show pastry image instead of QR code
         const pastryContainer = document.getElementById("pastryImage");
@@ -345,8 +345,8 @@ function showThankYou(isWinner) {
         resultMessage.textContent = `Better luck next time, ${currentUser.name}! You got ${correctAnswers} out of ${TOTAL_QUESTIONS} correct.`;
         
         // Show pastry image for non-winners too
-        const pastryContainer = document.getElementById("pastryImage");
-        pastryContainer.innerHTML = '<img src="pastry-image.png" alt="Pret Pastry" class="pastry-img">';
+        // const pastryContainer = document.getElementById("pastryImage");
+        // pastryContainer.innerHTML = '<img src="pastry-image.png" alt="Pret Pastry" class="pastry-img">';
     }
     
     // Save user data with result
