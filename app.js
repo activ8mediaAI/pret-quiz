@@ -355,6 +355,9 @@ function showThankYou(isWinner) {
     // Show home button
     document.querySelector('#thankYouPage .home-button').classList.remove('hidden');
     
+    // Make sure the terms and conditions are visible
+    document.querySelector('.terms-conditions').classList.remove('hidden');
+    
     // Set auto-return timer
     autoReturnTimer = setTimeout(() => {
         returnHome();
@@ -377,6 +380,12 @@ function returnHome() {
     // Reset form
     document.getElementById('userName').value = '';
     document.getElementById('userMobile').value = '';
+    
+    // Hide terms and conditions when returning to home
+    const termsElement = document.querySelector('.terms-conditions');
+    if (termsElement) {
+        termsElement.classList.add('hidden');
+    }
 }
 
 // Admin functions
@@ -465,6 +474,12 @@ document.addEventListener('DOMContentLoaded', function() {
             showAdminPage();
         }
     });
+    
+    // Initially hide the terms and conditions
+    const termsElement = document.querySelector('.terms-conditions');
+    if (termsElement) {
+        termsElement.classList.add('hidden');
+    }
 });
 
 // Initial setup
@@ -472,6 +487,12 @@ window.onload = function() {
     clearAllTimers();
     isQuizInProgress = false;
     showPage('homePage');
+    
+    // Initially hide the terms and conditions
+    const termsElement = document.querySelector('.terms-conditions');
+    if (termsElement) {
+        termsElement.classList.add('hidden');
+    }
 };
 
 // Add event listener for visibility changes
