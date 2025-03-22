@@ -83,7 +83,7 @@ let currentUser = {
 };
 let isQuizInProgress = false;
 const TOTAL_QUESTIONS = 10;
-const WINNING_SCORE = 7;
+const WINNING_SCORE = 5;
 
 // Function to handle user data storage
 function saveUserData(name, mobile, won) {
@@ -359,9 +359,9 @@ function showThankYou(isWinner) {
     document.querySelector('.terms-conditions').classList.remove('hidden');
     
     // Set auto-return timer
-    autoReturnTimer = setTimeout(() => {
-        returnHome();
-    }, 20000);
+    // autoReturnTimer = setTimeout(() => {
+     //   returnHome();
+    //}, 20000);
 }
 
 function returnHome() {
